@@ -28,4 +28,8 @@ You can now `import FF` and call the `FF` tactic.
 `FF` uses Gröbner basis solver implemented in cvc5 together with proof reconstruction on Lean side to combine the efficiency of SMT solvers with trustworthiness of Lean.
 
 ## The 'Yikes'.
-As it stands right now, `grind` is faster than `FF` :(. TODO - Are we going to find some big example?
+As it stands right now, `grind` is faster than `FF` :(.
+
+TODO
+- Integrate into CVC5 FF official extraction once done, extra information should speed up proof reconstruction.
+- Integrate into `lean-smt` to allow multi-theory proving.
