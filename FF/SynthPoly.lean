@@ -5,6 +5,7 @@ import FF.LCocoaParser
 import FF.Translate
 import Qq
 import FF.RemoveIneqs
+import Lake
 
 open Lean Qq Parser Tactic Elab Term
 
@@ -120,10 +121,8 @@ def hashGoal (goal : MVarId) : MetaM UInt64 := do
   return (←fullGoal).pretty.hash
 
 def CVC5Command (input : System.FilePath) : MetaM IO.Process.SpawnArgs := do
-  let opts ← getOptions
   pure {
-    cmd := opts.getString `EzPz.cvc5cmd
-    env := #[("LD_LIBRARY_PATH", opts.getString `EzPz.cvc5lib)]
+    cmd := ".lake/build/bin/cvc5ff/bin/ffdriver"
     args := #[input.toString]
   }
 
@@ -143,7 +142,9 @@ def cocoaOfCVC5 (goal : MVarId) : TermElabM Ast.Cocoa := goal.withContext do
     match Parser.runParserCategory (←getEnv) `term s!"[CoCoA|{cocoa}]" with
     | .ok stx => let `([CoCoA|$_cocoa]) := stx | throwError "Malformed CoCoA: {cocoa}"
                  unsafe Elab.Term.evalTerm Ast.Cocoa q(Ast.Cocoa) stx
-    | .error e => throwError "Cannot parse CVC5 output.\nInner error: {e}"    
+    | .error e => throwError "Cannot parse CVC5 output.\nInner error: {e}"
+  catch _ =>
+    throwError m!"Please run `lake build` first to initialise FF."
   finally
     IO.FS.removeFile filename
 
@@ -192,7 +193,14 @@ def processInequalities : TacticM Unit := Tactic.withMainContext do
 
 end
 
+private def retrieveCvc5IfNeeded : Lean.Elab.Tactic.TacticM Unit := do
+  let out ← IO.Process.run {cmd := "lake", args := #["build", "getCvc5"]}
+  if out.startsWith "Build completed successfully."
+  then pure ()
+  else logInfo m!"Retrieved cvc5."
+
 elab "FF" : tactic => do
+  retrieveCvc5IfNeeded
   withTraceNode `EzPz.Tactic.ff.trace (return m!"{exceptEmoji ·} Negate conclusion.") do
     tryNegateConclusion
   withTraceNode `EzPz.Tactic.ff.trace (return m!"{exceptEmoji ·} Eliminate inequalities.") do
