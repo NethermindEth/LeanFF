@@ -16,21 +16,13 @@ example {a b c d e f : ZMod 41} [Fact (Nat.Prime 41)]
 
 ## Installation.
 
-Install our version of cvc5 (TODO: Fabricio.)
-
 Put the following in your `lakefile.lean`:
 ```
 require ff from git
   "https://github.com/NethermindEth/CertiPlonk/" @ "Ferinko/FF_no_ring_nf"
 ```
 
-Tell `FF` where your `cvc5` and `libcvc5.so` are:
-```
--- cvc5 path
-set_option EzPz.cvc5cmd "<PATH TO cvc5>"
--- libcvc5.so path
-set_option EzPz.cvc5lib "<PATH TO libcvc5.so>"
-```
+You can now `import FF` and call the `FF` tactic.
 
 ## The 'How' and 'Why'.
 `FF` uses Gröbner basis solver implemented in cvc5 together with proof reconstruction on Lean side to combine the efficiency of SMT solvers with trustworthiness of Lean.

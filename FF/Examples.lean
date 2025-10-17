@@ -11,11 +11,11 @@ We can trace, debug and profile.
 -- set_option trace.EzPz.Tactic.ff.debug true
 -- set_option trace.profiler true
 
--- example {a x : ZMod 394357} [Fact (Nat.Prime 394357)]
---   (P1 : (1 - a) * 2 = 0)
---   (P2 : (x * 2) - a = 0) :
---   a - 1 = 0 := by
---   FF
+example {a x : ZMod 394357} [Fact (Nat.Prime 394357)]
+  (P1 : (1 - a) * 2 = 0)
+  (P2 : (x * 2) - a = 0) :
+  a - 1 = 0 := by
+  FF
 
 -- example {c1 c2 c3 c4 x Cgoal : ZMod 394357} [Fact (Nat.Prime 394357)]
 --   (P5  : c1^2*x + 2*c1*c2*x + c2^2*x + 2*c1*c3*x + 2*c2*c3*x + c3^2*x + 2*c1*c4*x + 2*c2*c4*x + 2*c3*c4*x + c4^2*x - c1 - c2 - c3 - c4 = 0)
