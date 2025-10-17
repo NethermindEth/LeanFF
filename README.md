@@ -19,7 +19,7 @@ example {a b c d e f : ZMod 41} [Fact (Nat.Prime 41)]
 Put the following in your `lakefile.lean`:
 ```
 require ff from git
-  "https://github.com/NethermindEth/CertiPlonk/" @ "Ferinko/FF_no_ring_nf"
+  "https://github.com/NethermindEth/LeanFF/" @ "main"
 ```
 
 You can now `import FF` and call the `FF` tactic.
